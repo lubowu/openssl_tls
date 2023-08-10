@@ -57,6 +57,46 @@
     "/home/lubow/work/src/test/Tls/client/pki/ed25519/" \
     "private_ed25519_cert.key"
 
+static const uint8_t root_ca_cert[] = "-----BEGIN CERTIFICATE-----\n" \
+"MIIBojCCAVSgAwIBAgIILniCUS7Dw9swBQYDK2VwMEgxCzAJBgNVBAYTAkNOMRUw\n"\
+"EwYDVQQKDAxURVNUX0JKRVZfQ0ExIjAgBgNVBAMMGVRFU1RfQkpFVl9ST09UX0NB\n"\
+"X0VEMjU1MTkwHhcNMjMwMTE3MDczOTQwWhcNNDIwMzE4MDczOTQwWjBHMQswCQYD\n"\
+"VQQGEwJDTjEVMBMGA1UECgwMVEVTVF9CSkVWX0NBMSEwHwYDVQQDDBhURVNUX0JK\n"\
+"RVZfU1VCX0NBX0VEMjU1MTkwKjAFBgMrZXADIQAg2tAyUZbo0sALWRgkeepZOH1f\n"\
+"SvpTVj91G8CHUnJXuqNdMFswHwYDVR0jBBgwFoAUVth2wOZK00GLjxwf2dT/Alfd\n"\
+"yjcwHQYDVR0OBBYEFFTIXSz0SFb2bYBzZ4vPDDxIKwcFMAwGA1UdEwQFMAMBAf8w\n"\
+"CwYDVR0PBAQDAgEOMAUGAytlcANBADuQ0qFdFlSwRAd6yF6Q0CewDWnLMxgV1BcU\n"\
+"NR0C2Y8MZXTtx+YzwLnJel83c+9MmW5GCg/elfEpl03YQszbOQ0=\n"\
+"-----END CERTIFICATE-----\n"\
+"-----BEGIN CERTIFICATE-----\n"\
+"MIIBpTCCAVegAwIBAgIILFHtYS68P78wBQYDK2VwMEgxCzAJBgNVBAYTAkNOMRUw\n"\
+"EwYDVQQKDAxURVNUX0JKRVZfQ0ExIjAgBgNVBAMMGVRFU1RfQkpFVl9ST09UX0NB\n"\
+"X0VEMjU1MTkwIBcNMjIwNzA1MDYxMzQyWhgPMjA1MjA2MjcwNjEzNDJaMEgxCzAJ\n"\
+"BgNVBAYTAkNOMRUwEwYDVQQKDAxURVNUX0JKRVZfQ0ExIjAgBgNVBAMMGVRFU1Rf\n"\
+"QkpFVl9ST09UX0NBX0VEMjU1MTkwKjAFBgMrZXADIQDmYIIucIKPuZEqQVqNupra\n"\
+"3hct+EkyC6M0JgCzgqW4KqNdMFswCwYDVR0PBAQDAgEGMAwGA1UdEwQFMAMBAf8w\n"\
+"HQYDVR0OBBYEFFbYdsDmStNBi48cH9nU/wJX3co3MB8GA1UdIwQYMBaAFFbYdsDm\n"\
+"StNBi48cH9nU/wJX3co3MAUGAytlcANBAC8TkaHC0+igIEmfwWD7OUNC+ru/UZ3i\n"\
+"jXzr4+NOotdALoDuTy6orEfjYNXJt5ziiGzzrM6oYlJMNnjewot6hAs=\n"\
+"-----END CERTIFICATE-----";
+static const uint8_t tbox_ca_cert[] = 
+"-----BEGIN CERTIFICATE-----\n"\
+"MIIBzzCCAYGgAwIBAgIILYnUtpfqqOMwBQYDK2VwMEcxCzAJBgNVBAYTAkNOMRUw\n"\
+"EwYDVQQKDAxURVNUX0JKRVZfQ0ExITAfBgNVBAMMGFRFU1RfQkpFVl9TVUJfQ0Ff\n"\
+"RUQyNTUxOTAeFw0yMzA4MTAwNTM2NThaFw0zMzA4MDcwNTM2NThaMGQxCzAJBgNV\n"\
+"BAYTAkNOMRUwEwYDVQQKDAxCQUlDX0JKRVZTSUcxFjAUBgNVBAoMDUJBSUNfU1NM\n"\
+"X1RCT1gxJjAkBgNVBAMMHVRCT1hfWktCSjQxVEVTVDAwMDAwMl9FRDI1NTE5MCow\n"\
+"BQYDK2VwAyEAeUdKfxg9HPPWhA0RApWVWHnhPawLYEyYS/oMLhmPlsmjbjBsMB8G\n"\
+"A1UdIwQYMBaAFFTIXSz0SFb2bYBzZ4vPDDxIKwcFMB0GA1UdDgQWBBS2bOfcUOmj\n"\
+"mos+0js5cIWTeVRFPDALBgNVHQ8EBAMCAf4wHQYDVR0lBBYwFAYIKwYBBQUHAwEG\n"\
+"CCsGAQUFBwMCMAUGAytlcANBAJdWRXzA7AgFmHfAh7SOlC2vQo1IQ1fsXNuZN3q8\n"\
+"exxl6hNOHeDHf2JfpP16vMrsnz1VGLRgbh1idgSJ4xY3vws=\n"\
+"-----END CERTIFICATE-----";
+static const uint8_t private_ed25519_key[] =
+    "-----BEGIN PRIVATE KEY-----\n" \
+    "MC4CAQAwBQYDK2VwBCIEICYkHLQ1qwssc4aOHBLgPY9zGFdITLxFfG0XAYvBoaJv\n" \
+    "-----END PRIVATE KEY-----";
+
 // #define USE_CERTIFICATE_FILE
 
 static struct sockaddr_in udp_addr;
@@ -704,20 +744,19 @@ int32_t EthAccessSocket::InitSslCtx()
         return -1;
     }
 #else
-    uint8_t buf[8192] = {0x0};
-    auto    len       = GetCertChain(ROOT_CERT_PATH, buf, sizeof(buf));
-    LoadRootCertFromSharedMem(ssl_ctx_, (const uint8_t*)buf);
-    // if (SSL_CTX_load_verify_locations(ssl_ctx_, ROOT_CERT_PATH, NULL) <= 0)
-    // {
-    //     std::cout << "[access] [SSL] SSL_CTX_load_verify_locations : "
-    //               << ERR_error_string(ERR_get_error(), NULL) << std::endl;
-    // }
-    memset(buf, 0, sizeof(buf));
-    GetCertChain(CLIENT_CERT_PATH, buf, sizeof(buf));
-    LoadUseCertFromSharedMem(ssl_ctx_, (const uint8_t*)buf);
-    memset(buf, 0, sizeof(buf));
-    GetPrivateKey(CLIENT_KEY_PATH, buf, sizeof(buf));
-    LoadPrivateKeyFromSharedMem(ssl_ctx_, buf);
+    // uint8_t buf[8192] = {0x0};
+    // auto    len       = GetCertChain(ROOT_CERT_PATH, buf, sizeof(buf));
+    // LoadRootCertFromSharedMem(ssl_ctx_, (const uint8_t*)buf);
+    LoadRootCertFromSharedMem(ssl_ctx_, root_ca_cert);
+
+    // memset(buf, 0, sizeof(buf));
+    // GetCertChain(CLIENT_CERT_PATH, buf, sizeof(buf));
+    // LoadUseCertFromSharedMem(ssl_ctx_, (const uint8_t*)buf);
+    LoadUseCertFromSharedMem(ssl_ctx_, tbox_ca_cert);
+    // memset(buf, 0, sizeof(buf));
+    // GetPrivateKey(CLIENT_KEY_PATH, buf, sizeof(buf));
+    // LoadPrivateKeyFromSharedMem(ssl_ctx_, buf);
+    LoadPrivateKeyFromSharedMem(ssl_ctx_, private_ed25519_key);
 #endif
 
     if (!SSL_CTX_check_private_key(ssl_ctx_))
@@ -1120,28 +1159,33 @@ bool EthAccessSocket::LoadPrivateKeyFromSharedMem(SSL_CTX*       ctx,
 bool EthAccessSocket::LoadRootCertFromSharedMem(SSL_CTX*       context,
                                                 const uint8_t* cert_buffer)
 {
-    BIO *cbio = BIO_new_mem_buf((void*)cert_buffer, -1);
-    if (!cbio) return false;
+    BIO* cbio = BIO_new_mem_buf((void*)cert_buffer, -1);
+    if (!cbio)
+        return false;
 
-    X509_INFO *itmp;
-    STACK_OF(X509_INFO) *inf = PEM_X509_INFO_read_bio(cbio, NULL, NULL, NULL);
+    X509_INFO* itmp;
+    STACK_OF(X509_INFO)* inf = PEM_X509_INFO_read_bio(cbio, NULL, NULL, NULL);
 
-    if (!inf) {
+    if (!inf)
+    {
         BIO_free(cbio);
         return false;
     }
-    
-    X509_STORE *ctx = SSL_CTX_get_cert_store(context);
+
+    X509_STORE* ctx = SSL_CTX_get_cert_store(context);
 
     // Iterate over contents of the PEM buffer, and add certs.
-    for (int i = 0; i < sk_X509_INFO_num(inf); i++) {
+    for (int i = 0; i < sk_X509_INFO_num(inf); i++)
+    {
         itmp = sk_X509_INFO_value(inf, i);
-        if (itmp->x509) {
+        if (itmp->x509)
+        {
             // Add intermediate cert to chain.
             if (!X509_STORE_add_cert(ctx, itmp->x509))
                 goto Error;
 
-            // Above function doesn't increment cert reference count. NULL the info
+            // Above function doesn't increment cert reference count. NULL the
+            // info
             itmp->x509 = NULL;
         }
     }
